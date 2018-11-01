@@ -154,20 +154,24 @@ protected:
     T temp = a->info;
     a->info = b->info;
     b->info = temp;
-
   }
 
-  //TODO
-  bool lessOrGreaterThan(T i, T j, bool reversed = false){
-    return (!reversed && i < j) || (reversed && i > j);
+  bool lessOrGreaterThan(Node<T> *a, Node<T> *b, bool reversed = false){
+    return (!reversed && a->info < b->info) || (reversed && a->info > b->info);
   }
 
-  //TODO
-  int minOrMaxInRange(T begin, T end, bool reversed = false){
-    int minOrMax = begin;
-    for(int i = begin; i < end; i++){
-      if(lessOrGreaterThan(i, minOrMax, reversed)){
-        minOrMax = i;
+  T minOrMaxInRange(Node<T> *start, bool reversed = false){
+    auto minOrMax = start;
+    auto current = start;
+    bool found = false;
+
+    while(current != nullptr && !found){
+      if(lessOrGreaterThan(current, minOrMax, reversed)){
+        minOrMax = current;
+        found = true;
+      }
+      else {
+        current = current->link;
       }
     }
 
