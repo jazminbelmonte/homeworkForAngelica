@@ -118,14 +118,33 @@ public:
   LinkedListIterator<T> begin(){return LinkedListIterator<T>(first);}
   LinkedListIterator<T> end(){return LinkedListIterator<T>(nullptr);}
 
+  //goes over all the elements and swaps if needed,
+  //the algorithm will go over all the elements until
+  //it goes through without a swap
   void sortByBubble(bool reversed = false){
-    //TODO
+  auto current1 = first;
+    auto current2 = first;
+    while (current1 != nullptr) {
+      while (current2 != nullptr) {
+        if (lessOrGreaterThan(current2, current1, reversed)) {
+          swap(current2, current1);
+        }
+        current2 = current2->link;
+      }
+      current1 = current1->link;
+    }
   }
 
+  //search and swap
+  //search for the maximum and the minimum and then swap them
   void sortBySelection(bool reversed = false){
     //TODO
   }
 
+  //start at second position and then compare left and right
+  //swap if necessary, then move one position over and compare left and right again
+  //if the right is less than the left, and the left before that then you keep swapping
+  //in a loop until the right is greater than
   void sortByInsertion(bool reversed = false){
     //TODO
   }
@@ -174,7 +193,6 @@ protected:
         current = current->link;
       }
     }
-
     return minOrMax;
   }
 

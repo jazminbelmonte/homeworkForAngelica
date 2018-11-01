@@ -30,7 +30,8 @@ public:
 
     // Required to support range-based for loop
     Item* begin(){ return elements; }
-    Item* end(){ return elements + sz; }
+    //changed from sz to sz-1 so it can return the actual last number
+    Item* end(){ return elements + sz-1; }
 
     void add(Item e){
         if(sz == capacity){
