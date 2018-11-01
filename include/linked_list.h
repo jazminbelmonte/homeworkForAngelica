@@ -149,6 +149,31 @@ protected:
     last = nullptr;
     count = 0;
   }
+
+  void swap(Node<T> *a, Node<T> *b){
+    T temp = a->info;
+    a->info = b->info;
+    b->info = temp;
+
+  }
+
+  //TODO
+  bool lessOrGreaterThan(T i, T j, bool reversed = false){
+    return (!reversed && i < j) || (reversed && i > j);
+  }
+
+  //TODO
+  int minOrMaxInRange(T begin, T end, bool reversed = false){
+    int minOrMax = begin;
+    for(int i = begin; i < end; i++){
+      if(lessOrGreaterThan(i, minOrMax, reversed)){
+        minOrMax = i;
+      }
+    }
+
+    return minOrMax;
+  }
+
 };
 
 #endif
