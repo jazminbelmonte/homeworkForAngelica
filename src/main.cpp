@@ -50,31 +50,31 @@ enum class LSortAlgorithm{
 
 template <typename T>
 struct LSortRunningTime {
-  SortAlgorithm algorithm;
+  LSortAlgorithm lalgorithm;
   duration<double, nano> sorted;
   duration<double, nano> random;
   duration<double, nano> reversed;
 
 
   void sort(LinkedList<T>& l, bool reversed = false){
-    switch(algorithm){
-      case SortAlgorithm::BUBBLE:
+    switch(lalgorithm){
+      case LSortAlgorithm::BUBBLE:
         l.sortByBubble(reversed);
         break;
-      case SortAlgorithm::SELECTION:
+      case LSortAlgorithm::SELECTION:
         l.sortBySelection(reversed);
         break;
-      case SortAlgorithm::INSERTION:
+      case LSortAlgorithm::INSERTION:
         l.sortByInsertion(reversed);
         break;
     }
   }
 
   string label(){
-    switch(algorithm){
-      case SortAlgorithm::BUBBLE: return "Bubble";
-      case SortAlgorithm::SELECTION: return "Selection";
-      case SortAlgorithm::INSERTION: return "Insertion";
+    switch(lalgorithm){
+      case LSortAlgorithm::BUBBLE: return "Bubble";
+      case LSortAlgorithm::SELECTION: return "Selection";
+      case LSortAlgorithm::INSERTION: return "Insertion";
     }
   }
 };
@@ -82,13 +82,19 @@ struct LSortRunningTime {
 int main(){
   srand(time(NULL));
   const int MAX_COLLECTION_SIZE = 100;
+
   Collection<char> original;
   for(int i = 0; i < MAX_COLLECTION_SIZE; i++){
-    original.add(rand() % (3 * MAX_COLLECTION_SIZE) + 100);
+    int r = rand() % 26;
+    char c = 'a' + r;
+    original.add(c);
   }
+
   LinkedList<char> originalL;
   for(int i = 0; i < MAX_COLLECTION_SIZE; i++){
-    originalL.add(rand() % (3 * MAX_COLLECTION_SIZE) + 100);
+    int r = rand() % 26;
+    char c = 'a' + r;
+    originalL.add(c);
   }
 
   // cout << original << endl;
@@ -97,10 +103,16 @@ int main(){
   // original.sortByQuicksort(true);
   // cout << original << endl;
 
-  SortRunningTime<int> runningTimes[] = {
+  SortRunningTime<char> runningTimes[] = {
     {SortAlgorithm::BUBBLE},
     {SortAlgorithm::SELECTION},
     {SortAlgorithm::INSERTION}
+  };
+
+  LSortRunningTime<char> LrunningTimes[] = {
+    {LSortAlgorithm::BUBBLE},
+    {LSortAlgorithm::SELECTION},
+    {LSortAlgorithm::INSERTION}
   };
 
   for(auto& rt : runningTimes){
@@ -123,29 +135,28 @@ int main(){
     rt.sort(c);
     end = high_resolution_clock::now();
     rt.reversed = end - start;
+  }
 
-
-
-
-    LinkedList<char> d(original);
-    rt.sort(a);
+  for(auto& lrt : LrunningTimes){
+    LinkedList<char> d(originalL);
+    lrt.sort(d);
     auto start = high_resolution_clock::now();
-    rt.sort(a);
+    lrt.sort(d);
     auto end = high_resolution_clock::now();
-    rt.sorted = end - start;
+    lrt.sorted = end - start;
 
-    Collection<int> e(original);
+    LinkedList<char> e(originalL);
     start = high_resolution_clock::now();
-    rt.sort(b);
+    lrt.sort(e);
     end = high_resolution_clock::now();
-    rt.random = end - start;
+    lrt.random = end - start;
 
-    Collection<int> f(original);
-    rt.sort(c, true);
+    LinkedList<char> f(originalL);
+    lrt.sort(f, true);
     start = high_resolution_clock::now();
-    rt.sort(c);
+    lrt.sort(f);
     end = high_resolution_clock::now();
-    rt.reversed = end - start;
+    lrt.reversed = end - start;
   }
 
   cout << endl
@@ -171,11 +182,11 @@ int main(){
        << setw(15) << "Random"
        << setw(15) << "Reversed" << endl;
 
-  for(auto& rt : runningTimes){
-    cout << fixed << setprecision(3) << setw(15) << rt.label()
-         << setw(15) << rt.sorted.count()
-         << setw(15) << rt.random.count()
-         << setw(15) << rt.reversed.count() << endl;
+  for(auto& lrt : LrunningTimes){
+    cout << fixed << setprecision(3) << setw(15) << lrt.label()
+         << setw(15) << lrt.sorted.count()
+         << setw(15) << lrt.random.count()
+         << setw(15) << lrt.reversed.count() << endl;
   }
 
   return 0;

@@ -25,7 +25,7 @@ public:
   bool operator!=(const LinkedListIterator<T>& rhs) const {
       return current != rhs.current;
   }
-
+  //private:
   Node<T>* current;
 };
 
@@ -135,6 +135,8 @@ public:
     }
   }
 
+  //because there would be too many iterators i decided to do this the normal way
+  //by just using pointers to nodes, and having those act like iterators
   void sortByInsertion(bool reversed = false){
     Node<T> *lastInOrder = first;
     Node<T> *firstOutOfOrder;
@@ -143,7 +145,8 @@ public:
 
     while(lastInOrder->link!= nullptr){
       firstOutOfOrder = lastInOrder->link;
-
+      //I made sure to implement the lessOrGreaterThan function here so that
+      //the sort would still work when we needed to sort them in reverse
       if(lessOrGreaterThan(firstOutOfOrder, first, reversed)){
         lastInOrder->link = firstOutOfOrder->link;
         firstOutOfOrder->link = first;
