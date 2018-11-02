@@ -6,6 +6,8 @@
 #include "linked_list.h"
 #include "collection.h"
 
+//used example from class to create this printing format
+
 using namespace std;
 using namespace chrono;
 
@@ -80,7 +82,7 @@ struct LSortRunningTime {
 };
 
 int main(){
-  srand(time(NULL));
+  srand(time(nullptr));
   const int MAX_COLLECTION_SIZE = 100;
 
   Collection<char> original;
@@ -96,12 +98,6 @@ int main(){
     char c = 'a' + r;
     originalL.add(c);
   }
-
-  // cout << original << endl;
-  // original.sortByQuicksort();
-  // cout << original << endl;
-  // original.sortByQuicksort(true);
-  // cout << original << endl;
 
   SortRunningTime<char> runningTimes[] = {
     {SortAlgorithm::BUBBLE},

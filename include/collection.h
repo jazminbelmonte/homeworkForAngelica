@@ -84,20 +84,13 @@ public:
       }
     }
 
-    void sortByInsertion(bool reversed = false){
-      for(int i = 1; i < sz; i++){
-        for(int j = i; j >= 1 && lessOrGreaterThan(j, j-1, reversed); j--){
-          swap(j, j-1);
+    void sortByInsertion(bool reversed = false) {
+      for (int i = 1; i < sz; i++) {
+        for (int j = i; j >= 1 && lessOrGreaterThan(j, j - 1, reversed); j--) {
+          swap(j, j - 1);
         }
       }
     }
-
-
-//  for (int i = 1; i < count-1; i++){
-//    ++sz;
-//  }
-
-
 
     ~Collection(){
         delete[] elements;

@@ -25,7 +25,7 @@ public:
   bool operator!=(const LinkedListIterator<T>& rhs) const {
       return current != rhs.current;
   }
-  //private:
+  private:
   Node<T>* current;
 };
 
@@ -119,57 +119,52 @@ public:
   LinkedListIterator<T> end(){return LinkedListIterator<T>(nullptr);}
 
   void sortByBubble(bool reversed = false){
-    for(LinkedListIterator<T> i = this->begin(); i != this->end(); ++i){
-      for(LinkedListIterator<T> j = this->begin(); j != i; ++j){
-        if(lessOrGreaterThan(i.current, j.current, reversed)){
-          swap(j.current, i.current);
+
+    for (int i = 0; i < count; i++) {
+      //bubble sorting only swaps values next to each other
+      //so we only need the first and the second node
+      Node<T> *a = first;
+      Node<T> *b = first->link;
+      while (b != nullptr) {
+        if (lessOrGreaterThan(b, a, reversed)) {
+          swap(b, a);
         }
+        //move both nodes forward
+        a = b;
+        b = b->link;
       }
     }
   }
 
   void sortBySelection(bool reversed = false){
-    LinkedListIterator<T> j = this->end();
-    for(LinkedListIterator<T> i = this->begin(); i != j; ++i){
-      swap(i.current, minOrMaxInRange(i.current, reversed));
+    //for selection we only have to worry about the first
+    //and making sure we don't go past last
+    Node<T>* a = first;
+    Node<T>* b = last;
+    while(a != nullptr){
+      //swap the first of value of the unsorted section
+      //with the minimum
+      swap(a, minOrMaxInRange(a, reversed));
+      //then that node becomes the first value of the
+      //sorted section so we make the first
+      //value of the unsorted section the next one
+      a = a->link;
     }
   }
 
-  //because there would be too many iterators i decided to do this the normal way
-  //by just using pointers to nodes, and having those act like iterators
+  //since we cannot move backward like the insertion
+  //in the collection array we will have to move
+  //forward
   void sortByInsertion(bool reversed = false){
-    Node<T> *lastInOrder = first;
-    Node<T> *firstOutOfOrder;
-    Node<T> *current;
-    Node<T> *trailCurrent;
-
-    while(lastInOrder->link!= nullptr){
-      firstOutOfOrder = lastInOrder->link;
-      //I made sure to implement the lessOrGreaterThan function here so that
-      //the sort would still work when we needed to sort them in reverse
-      if(lessOrGreaterThan(firstOutOfOrder, first, reversed)){
-        lastInOrder->link = firstOutOfOrder->link;
-        firstOutOfOrder->link = first;
-        first = firstOutOfOrder;
-      } else {
-          trailCurrent = first;
-          current = first->link;
-
-          while(lessOrGreaterThan(current, firstOutOfOrder, reversed)){
-            trailCurrent = current;
-            current = current->link;
-          }
-
-          if(current!=firstOutOfOrder){
-            lastInOrder->link = firstOutOfOrder->link;
-            firstOutOfOrder->link = current;
-            trailCurrent->link = firstOutOfOrder;
-          } else {
-            lastInOrder = lastInOrder->link;
-          }
-      }//end else
-    }//end while
-  }//end sort
+    //we will treat these two nodes as the current
+    //and the iterator to the current
+    Node<T>* a = first;
+    Node<T>* b = first->link;
+    while(a != nullptr){
+      swap(a, minOrMaxInRange(a, reversed));
+      a = a->link;
+    }
+  };
 
   ~LinkedList() { destroy();}
 protected:
@@ -192,15 +187,20 @@ protected:
   }
 
   void swap(Node<T> *a, Node<T> *b){
+    //only swap info inside the nodes, not the actual nodes
     T temp = a->info;
     a->info = b->info;
     b->info = temp;
   }
 
   bool lessOrGreaterThan(Node<T> *a, Node<T> *b, bool reversed = false){
+    //only compare info inside the nodes, not the actual nodes
     return (!reversed && a->info < b->info) || (reversed && a->info > b->info);
   }
 
+  //because the loop will automatically stop when it hits
+  //the end of the list which is null we don't need to pass
+  //in an ending value
   Node<T>* minOrMaxInRange(Node<T> *start, bool reversed = false){
     auto minOrMax = start;
     auto current = start;
