@@ -92,6 +92,13 @@ public:
       }
     }
 
+
+//  for (int i = 1; i < count-1; i++){
+//    ++sz;
+//  }
+
+
+
     ~Collection(){
         delete[] elements;
     }

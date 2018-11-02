@@ -25,7 +25,7 @@ public:
   bool operator!=(const LinkedListIterator<T>& rhs) const {
       return current != rhs.current;
   }
-private:
+
   Node<T>* current;
 };
 
@@ -118,36 +118,55 @@ public:
   LinkedListIterator<T> begin(){return LinkedListIterator<T>(first);}
   LinkedListIterator<T> end(){return LinkedListIterator<T>(nullptr);}
 
-  //goes over all the elements and swaps if needed,
-  //the algorithm will go over all the elements until
-  //it goes through without a swap
   void sortByBubble(bool reversed = false){
-  auto current1 = first;
-    auto current2 = first;
-    while (current1 != nullptr) {
-      while (current2 != nullptr) {
-        if (lessOrGreaterThan(current2, current1, reversed)) {
-          swap(current2, current1);
+    for(LinkedListIterator<T> i = this->begin(); i != this->end(); ++i){
+      for(LinkedListIterator<T> j = this->begin(); j != i; ++j){
+        if(lessOrGreaterThan(i.current, j.current, reversed)){
+          swap(j.current, i.current);
         }
-        current2 = current2->link;
       }
-      current1 = current1->link;
     }
   }
 
-  //search and swap
-  //search for the maximum and the minimum and then swap them
   void sortBySelection(bool reversed = false){
-    //TODO
+    LinkedListIterator<T> j = this->end();
+    for(LinkedListIterator<T> i = this->begin(); i != j; ++i){
+      swap(i.current, minOrMaxInRange(i.current, reversed));
+    }
   }
 
-  //start at second position and then compare left and right
-  //swap if necessary, then move one position over and compare left and right again
-  //if the right is less than the left, and the left before that then you keep swapping
-  //in a loop until the right is greater than
   void sortByInsertion(bool reversed = false){
-    //TODO
-  }
+    Node<T> *lastInOrder = first;
+    Node<T> *firstOutOfOrder;
+    Node<T> *current;
+    Node<T> *trailCurrent;
+
+    while(lastInOrder->link!= nullptr){
+      firstOutOfOrder = lastInOrder->link;
+
+      if(lessOrGreaterThan(firstOutOfOrder, first, reversed)){
+        lastInOrder->link = firstOutOfOrder->link;
+        firstOutOfOrder->link = first;
+        first = firstOutOfOrder;
+      } else {
+          trailCurrent = first;
+          current = first->link;
+
+          while(lessOrGreaterThan(current, firstOutOfOrder, reversed)){
+            trailCurrent = current;
+            current = current->link;
+          }
+
+          if(current!=firstOutOfOrder){
+            lastInOrder->link = firstOutOfOrder->link;
+            firstOutOfOrder->link = current;
+            trailCurrent->link = firstOutOfOrder;
+          } else {
+            lastInOrder = lastInOrder->link;
+          }
+      }//end else
+    }//end while
+  }//end sort
 
   ~LinkedList() { destroy();}
 protected:
@@ -179,15 +198,13 @@ protected:
     return (!reversed && a->info < b->info) || (reversed && a->info > b->info);
   }
 
-  T minOrMaxInRange(Node<T> *start, bool reversed = false){
+  Node<T>* minOrMaxInRange(Node<T> *start, bool reversed = false){
     auto minOrMax = start;
     auto current = start;
-    bool found = false;
 
-    while(current != nullptr && !found){
+    while(current != nullptr){
       if(lessOrGreaterThan(current, minOrMax, reversed)){
         minOrMax = current;
-        found = true;
       }
       else {
         current = current->link;
@@ -199,3 +216,4 @@ protected:
 };
 
 #endif
+

@@ -70,6 +70,8 @@ TEST_CASE("Test Selection Sort - Linked-list-based") {
     CHECK(bout.str() == "t t t s s s s r o o n n l l l k i i i e e e e d d c b a ");
 }
 
+
+
 TEST_CASE("Test Insertion Sort - Array-based") {
     string msg = "insertionsortarraybased";
     Collection<char> c;
@@ -101,3 +103,4 @@ TEST_CASE("Test Insertion Sort - Linked-list-based") {
     bout << c;
     CHECK(bout.str() =="u t t s s s r o n l l l k i i e e e d d b b b b a ");
 }
+
